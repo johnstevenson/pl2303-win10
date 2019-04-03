@@ -1,0 +1,16 @@
+
+# Auto-detect text files, ensure they use LF.
+* text=auto eol=lf
+
+*.cat binary
+*.inf text eol=crlf
+*.sys binary
+
+# Ignore these files in GitHub dists and `git archive` actions.
+/.editorconfig export-ignore
+/.gitattributes export-ignore
+/.github export-ignore
+/.gitignore export-ignore
+/appveyor.yml export-ignore
+/LICENSE export-ignore
+*.md export-ignore
