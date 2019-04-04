@@ -1,5 +1,8 @@
 # pl2303-win10
 
+![AppVeyor](https://img.shields.io/appveyor/ci/johnstevenson/pl2303-win10.svg)
+![license](https://img.shields.io/github/license/johnstevenson/pl2303-win10.svg)
+
 Windows driver for end-of-life PL2303 chipsets.
 
 ## About
