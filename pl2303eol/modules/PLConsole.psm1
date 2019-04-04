@@ -7,18 +7,12 @@ class PLConsole
             Write-Host $message
         }
 
-        if ($global:Host.name -eq 'ConsoleHost') {
+        try {
             Write-Host
-            Write-Host -NoNewline 'Press any key to finish...'
-            $global:Host.UI.RawUI.FlushInputBuffer()
-            $global:Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyUp') >$null
+            Read-Host 'Press the enter key to finish'
+        } catch {
         }
         exit $exitCode
-    }
-
-    [void] Finish()
-    {
-        $this.Finish([string]::Empty, 0)
     }
 
     [void] FinishWithHelp([string]$message)
@@ -26,7 +20,7 @@ class PLConsole
         Write-Host
         Write-Host $message
         $this.ShowHelp()
-        $this.Finish()
+        $this.Finish([string]::Empty, 0)
     }
 
     [void] FinishVerbose([string]$message)
@@ -35,7 +29,7 @@ class PLConsole
         Write-Host $message
         $this.ShowHelp()
         $this.ShowInfo()
-        $this.Finish()
+        $this.Finish([string]::Empty, 0)
     }
 
     [void] FinishWithInfo()
@@ -43,7 +37,7 @@ class PLConsole
         Write-Host
         Write-Host 'The installed driver has been activated by Windows and is now ready for use.'
         $this.ShowInfo()
-        $this.Finish()
+        $this.Finish([string]::Empty, 0)
     }
 
     [void] Indent([string]$message)
@@ -53,7 +47,13 @@ class PLConsole
 
     [bool] PromptYes ([string]$question)
     {
-        $reply = Read-Host -Prompt "   $question [y/n]"
+        try {
+            $reply = Read-Host -Prompt "   $question [y/n]"
+        } catch {
+            # Answer Yes if non-interactive
+            $reply = 'y'
+        }
+
         Write-Host
         return ($reply -match '^y')
     }
