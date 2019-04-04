@@ -139,7 +139,7 @@ class PLApp
 
     [bool] InstallDriver()
     {
-         Write-Host "Adding PL-2303 driver ($($this.Driver.Version)) to the DriverStore"
+        Write-Host "Adding PL-2303 driver ($($this.Driver.Version)) to the DriverStore"
 
         # Install from a temporary folder, so Windows will not use the stored source location
         $tempPath = [PLUtil]::CreateTempDriverFolder($this.Driver.Path)
