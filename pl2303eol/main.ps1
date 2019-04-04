@@ -1,6 +1,11 @@
 #Requires -Version 5.0 -RunAsAdministrator
 using module .\modules\PLApp.psm1
 
+# Ensure errors stop the process if non-interactive
+if ([Environment]::GetCommandLineArgs() -Contains '-NonInteractive') {
+    $ErrorActionPreference = 'Stop'
+}
+
 $app = [PLApp]::new("$PSScriptRoot\driver")
 
 Write-Host 'Prolific PL-2303 USB-to-Serial driver. Compatible with unsupported'
