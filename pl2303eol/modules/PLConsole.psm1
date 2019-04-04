@@ -9,7 +9,7 @@ class PLConsole
 
         try {
             Write-Host
-            Read-Host 'Press the enter key to finish'
+            Read-Host -Prompt 'Press the enter key to finish'
         } catch {
         }
         exit $exitCode
@@ -53,8 +53,6 @@ class PLConsole
             # Answer Yes if non-interactive
             $reply = 'y'
         }
-
-        Write-Host
         return ($reply -match '^y')
     }
 
