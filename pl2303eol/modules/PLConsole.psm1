@@ -60,8 +60,8 @@ class PLConsole
 
     [void] ShowHelp()
     {
-        $this.WriteIndented('* Unplug and plug in your USB device. Then run this script again.')
-        $this.WriteIndented('* Restart your computer. Then run this script again.')
+        $this.Indent('* Unplug and plug in your USB device. Then run this script again.')
+        $this.Indent('* Restart your computer. Then run this script again.')
     }
 
     [void] ShowInfo()
