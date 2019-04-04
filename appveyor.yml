@@ -1,0 +1,9 @@
+build: false
+shallow_clone: true
+
+environment:
+  PL2303_NO_INTERACTION: 1
+
+test_script:
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - install.bat
