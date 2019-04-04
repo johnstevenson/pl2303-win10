@@ -67,6 +67,6 @@ class PLConsole
         Write-Host
         Write-Host '** Windows Automatic Updates may replace this driver with a newer version,'
         Write-Host 'which will be incompatible. If this happens, you can rollback the driver'
-        Write-Host 'to this version. The README file explains how to prevent this.'
+        Write-Host 'to this version. The README.txt file explains how to prevent this.'
     }
 }
