@@ -19,7 +19,7 @@ class PLConsole
     [void] FinishForInstaller([string]$name)
     {
         Write-Host
-        Write-Host "Please uninstall '$name' from the Control Panel, otherwise it"
+        Write-Host "Please uninstall '$name' from the Control Panel, because it"
         Write-Host 'will remove our driver if uninstalled later. Then run this script again.'
         $this.Finish([string]::Empty, 1)
     }
@@ -71,6 +71,7 @@ class PLConsole
     [void] ShowHelp()
     {
         $this.Indent('* Unplug and plug in your USB device. Then run this script again.')
+        $this.Indent('  If this issue persists, then:')
         $this.Indent('* Restart your computer. Then run this script again.')
     }
 
