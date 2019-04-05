@@ -51,8 +51,8 @@ class PLApp
         return [PLUtil]::CheckSameVersion($version, $this.Driver.Version)
     }
 
-    [void] GetConsent() {
-
+    [void] GetConsent()
+    {
         Write-Host "This script will install PL-2303 driver, version $($this.Driver.Version)."
 
         $installedVersion = [PLUtil]::GetFileVersion($this.SystemSys)
@@ -80,7 +80,9 @@ class PLApp
             $this.IO.Indent("$prefix and will be replaced.")
         }
 
-        if (!($this.IO.PromptYes('Please confirm that you want to do this?'))) {
+        $question = 'Please confirm that you want to do this?'
+
+        if (!($this.IO.PromptYes($question, 'y'))) {
             exit 1
         }
     }

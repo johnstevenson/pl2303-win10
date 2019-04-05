@@ -70,7 +70,7 @@ Write-Host
 Write-Host 'To get Windows to activate this driver, you must re-plug in your USB device.'
 $question = 'Enter Yes when you have done this, or No to skip this step'
 
-if (!($app.IO.PromptYes($question))) {
+if (!($app.IO.PromptYes($question, 'n'))) {
     # The user chose to skip this step
     $msg = 'If your USB device does not work, please try the following:'
     $app.IO.FinishVerbose($msg)

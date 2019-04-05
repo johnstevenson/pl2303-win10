@@ -11,6 +11,7 @@ class PLConsole
             Write-Host
             Read-Host -Prompt 'Press the enter key to finish'
         } catch {
+            # Handle non-interactive use
         }
         exit $exitCode
     }
@@ -45,15 +46,18 @@ class PLConsole
         Write-Host "   $message"
     }
 
-    [bool] PromptYes ([string]$question)
+    [bool] PromptYes ([string]$question, [string]$default)
     {
+        $prompt = "   $question [y/n]"
+
         try {
-            $reply = Read-Host -Prompt "   $question [y/n]"
+            $answer = Read-Host -Prompt $prompt
         } catch {
-            # Answer Yes if non-interactive
-            $reply = 'y'
+            # Handle non-interactive use
+            $answer = $default
+            Write-Host (-join ($prompt, ': ', $default))
         }
-        return ($reply -match '^y')
+        return ($answer -match '^y')
     }
 
     [void] ShowHelp()
@@ -65,8 +69,8 @@ class PLConsole
     [void] ShowInfo()
     {
         Write-Host
-        Write-Host '** Windows Automatic Updates may replace this driver with a newer version,'
-        Write-Host 'which will be incompatible. If this happens, you can rollback the driver'
-        Write-Host 'to this version. The README.txt file explains how to prevent this.'
+        Write-Host '** Windows Automatic Updates may replace this driver with the latest version.'
+        Write-Host 'If this happens, you can roll back the driver to this compatible version.'
+        Write-Host 'The README.txt file explains how to prevent this.'
     }
 }
