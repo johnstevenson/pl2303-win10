@@ -18,7 +18,7 @@ class PLApp
 
     [void] CheckForDrivers()
     {
-        Write-Host 'Checking the DriverStore for installed PL-2303 drivers'
+        Write-Host 'Checking the DriverStore for installed PL-2303 driver packages'
         $this.InstalledDrivers = [PLUtil]::GetDrivers($this.Driver.InfFile)
 
         if ($this.InstalledDrivers.Count -eq 0) {
@@ -33,13 +33,24 @@ class PLApp
 
     [void] CheckForInstaller()
     {
-        Write-Host 'Checking the Registry for a PL-2303 driver installation program'
+        Write-Host 'Checking the Registry for a PL-2303 installation program'
         $installer = $this.GetInstallationProgram()
 
         if ($installer) {
             $this.IO.Indent("Found: $installer")
-            $msg = "Please uninstall '$installer' from the Control Panel, then run this script again."
-            $this.IO.Finish($msg, 1)
+            $this.IO.FinishForInstaller($installer)
+        } else {
+            $this.IO.Indent('Found: none')
+        }
+    }
+
+    [void] CheckForSysFile()
+    {
+        Write-Host 'Checking the System directory for a PL-2303 device driver'
+        $version = [PLUtil]::GetFileVersion($this.SystemSys)
+
+        if ($version) {
+            $this.IO.Indent("Found: $($this.Driver.SysFile) ($version)")
         } else {
             $this.IO.Indent('Found: none')
         }
@@ -53,7 +64,8 @@ class PLApp
 
     [void] GetConsent()
     {
-        Write-Host "This script will install PL-2303 driver, version $($this.Driver.Version)."
+        Write-Host
+        Write-Host "This script will install PL-2303 driver, version $($this.Driver.Version)"
 
         $installedVersion = [PLUtil]::GetFileVersion($this.SystemSys)
         $sameVersion = [PLUtil]::CheckSameVersion($installedVersion, $this.Driver.Version)
@@ -82,7 +94,9 @@ class PLApp
 
         $question = 'Please confirm that you want to do this?'
 
-        if (!($this.IO.PromptYes($question, 'y'))) {
+        if ($this.IO.PromptYes($question, 'y')) {
+            Write-Host
+        } else {
             exit 1
         }
     }

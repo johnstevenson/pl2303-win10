@@ -16,6 +16,14 @@ class PLConsole
         exit $exitCode
     }
 
+    [void] FinishForInstaller([string]$name)
+    {
+        Write-Host
+        Write-Host "Please uninstall '$name' from the Control Panel, otherwise it"
+        Write-Host 'will remove our driver if uninstalled later. Then run this script again.'
+        $this.Finish([string]::Empty, 1)
+    }
+
     [void] FinishWithHelp([string]$message)
     {
         Write-Host
