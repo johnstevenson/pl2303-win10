@@ -9,5 +9,5 @@
   * Added: Appveyor CI simple testing.
   * Added: inital code and artefacts
 
-[Unreleased]: https://github.com/composer/xdebug-handler/compare/1.0.0-rc.1...HEAD
-[1.0.0rc.1]: https://github.com/composer/xdebug-handler/compare/5b50ac2588dd...1.0.0-rc.1
+[Unreleased]: https://github.com/johnstevenson/pl2303-win10/compare/1.0.0-rc.1...HEAD
+[1.0.0-rc.1]: https://github.com/johnstevenson/pl2303-win10/compare/5b50ac2588dd...1.0.0-rc.1
