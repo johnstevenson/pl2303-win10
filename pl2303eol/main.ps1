@@ -8,6 +8,7 @@ if ([Environment]::GetCommandLineArgs() -Contains '-NonInteractive') {
 
 $app = [PLApp]::new("$PSScriptRoot\driver")
 
+Write-Host
 Write-Host 'Prolific PL-2303 USB-to-Serial driver. Compatible with unsupported'
 Write-Host 'end-of-life microchip versions (PL-2303HXA and PL-2303XA).'
 Write-Host "Driver version: $($app.Driver.Version) ($($app.Driver.Date))"
@@ -15,14 +16,16 @@ Write-Host
 
 
 # *****************************************************************************
-# Show a list of PL-2303 drivers in the DriverStore then check if a PL-2303
-# driver installation program is installed.
+# Show a list of PL-2303 drivers in the DriverStore and any sys file in the
+# System drivers directory. Then check if a PL-2303 driver installation
+# program is installed.
 #
 # - If there is an installer, the user will be asked to uninstall it and the
-#   script will exit. This is because it could be uninstalled from the Control
-#   Panel later, which would remove our compatible driver.
+#   script will exit. We need to enforce this because uninstalling it later
+#   would remove our compatible driver.
 # *****************************************************************************
 $app.CheckForDrivers()
+$app.CheckForSysFile()
 $app.CheckForInstaller()
 
 
