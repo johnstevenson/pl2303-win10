@@ -25,7 +25,6 @@ Write-Host
 #   would remove our compatible driver.
 # *****************************************************************************
 $app.CheckForDrivers()
-$app.CheckForSysFile()
 $app.CheckForInstaller()
 
 
