@@ -82,6 +82,16 @@ class PLUtil
         return $drivers
     }
 
+    static [object] MatchDriver([array]$drivers, [string]$version)
+    {
+        foreach ($driver in $drivers) {
+            if ([PLUtil]::CheckSameVersion($version, $driver.version)) {
+                return $driver.Clone()
+            }
+        }
+        return $null
+    }
+
     static [array] RemoveDrivers([array]$drivers)
     {
         $errors = @()

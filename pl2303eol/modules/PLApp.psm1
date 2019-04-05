@@ -29,6 +29,8 @@ class PLApp
                 $this.IO.Indent($msg)
             }
         }
+
+        $this.CheckForSysFile($this.InstalledDrivers)
     }
 
     [void] CheckForInstaller()
@@ -44,13 +46,22 @@ class PLApp
         }
     }
 
-    [void] CheckForSysFile()
+    [void] CheckForSysFile([array]$drivers)
     {
         Write-Host 'Checking the System directory for a PL-2303 device driver'
         $version = [PLUtil]::GetFileVersion($this.SystemSys)
 
         if ($version) {
-            $this.IO.Indent("Found: $($this.Driver.SysFile) ($version)")
+            # We cannot use the file date, so try and find a match from the DriverStore
+            $item = [PLUtil]::MatchDriver($drivers, $version)
+
+            if ($item) {
+                $info = "$($item.date), $version"
+            } else {
+                $info = $version
+            }
+
+            $this.IO.Indent("Found: $($this.Driver.SysFile) ($info)")
         } else {
             $this.IO.Indent('Found: none')
         }
@@ -69,14 +80,7 @@ class PLApp
 
         $installedVersion = [PLUtil]::GetFileVersion($this.SystemSys)
         $sameVersion = [PLUtil]::CheckSameVersion($installedVersion, $this.Driver.Version)
-        $matchedVersion = $false
-
-        foreach ($driver in $this.InstalledDrivers) {
-            if ([PLUtil]::CheckSameVersion($installedVersion, $driver.version)) {
-                $matchedVersion = $true
-                break
-            }
-        }
+        $matchedVersion = [PLUtil]::MatchDriver($this.InstalledDrivers, $installedVersion)
 
         if ($installedVersion)
         {
