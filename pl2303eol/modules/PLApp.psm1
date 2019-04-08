@@ -66,22 +66,8 @@ class PLApp
         Write-Host
         Write-Host "This script will install PL-2303 driver, version $($this.Driver.Version)"
 
-        $installedVersion = [PLUtil]::GetFileVersion($this.SystemSys)
-        $sameVersion = [PLUtil]::CheckSameVersion($installedVersion, $this.Driver.Version)
-        $matchedVersion = [PLUtil]::MatchDriver($this.InstalledDrivers, $installedVersion)
-
-        if ($installedVersion)
-        {
-            if ($matchedVersion) {
-                if ($sameVersion) {
-                    $prefix = 'This version is already installed'
-                } else {
-                    $prefix = "Version $installedVersion is installed"
-                }
-            } else {
-                $prefix = "Version $installedVersion may be installed"
-            }
-            $this.IO.Indent("$prefix and will be replaced.")
+        if ($this.Config.InstalledMessage) {
+            $this.IO.Indent("$($this.Config.InstalledMessage) and will be replaced.")
         }
 
         $question = 'Please confirm that you want to do this?'
