@@ -8,7 +8,7 @@ $app = [PLApp]::new("$PSScriptRoot\driver")
 Write-Host
 Write-Host 'Prolific PL-2303 USB-to-Serial driver. Compatible with unsupported'
 Write-Host 'end-of-life microchip versions (PL-2303HXA and PL-2303XA).'
-Write-Host "Driver version: $($app.Driver.Version) ($($app.Driver.Date))"
+Write-Host "Driver version: $($app.Driver.GetVersionString())"
 Write-Host
 
 
