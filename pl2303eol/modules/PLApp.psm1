@@ -8,26 +8,22 @@ class PLApp
     [PLConfig]$Config
     [PLDriver]$Driver
     [PLConsole]$IO
-    [string]$SystemSys
-    [array]$InstalledDrivers
 
     PLApp([string]$driverPath)
     {
         $this.Driver = [PLDriver]::new($driverPath)
         $this.IO = [PLConsole]::new()
-        $this.SystemSys = Join-Path $([Environment]::SystemDirectory) "drivers\$($this.Driver.SysFile)"
     }
 
     [void] CheckForDrivers()
     {
         Write-Host 'Checking the DriverStore for installed PL-2303 driver packages'
         $this.Config = [PLConfig]::new($this.Driver)
-        $this.InstalledDrivers = $this.Config.Drivers
 
-        if ($this.InstalledDrivers.Count -eq 0) {
+        if ($this.Config.Drivers.Count -eq 0) {
             $this.IO.Indent('Found: none')
         } else {
-            foreach ($item in $this.InstalledDrivers) {
+            foreach ($item in $this.Config.Drivers) {
                 $msg = "Found: $($item.oem) ($($item.date), $($item.version))"
                 $this.IO.Indent($msg)
             }
@@ -49,34 +45,54 @@ class PLApp
 
         if ($installer) {
             $this.IO.Indent("Found: $installer")
-            $this.IO.FinishForInstaller($installer)
+            $this.IO.FinishFailInstaller($installer)
         } else {
             $this.IO.Indent('Found: none')
         }
     }
 
+    [void] CheckSameConfig($uninstall)
+    {
+        if (!($this.Config.CheckCurrent($uninstall))) {
+            Write-Host 'Unable to continue. The driver configuration has been changed.'
+            $this.IO.Indent('Please run this script again')
+            $this.IO.Finish([string]::Empty, 1)
+        }
+    }
+
     [bool] CheckSystemSys()
     {
-        $version = [PLUtil]::GetFileVersion($this.SystemSys)
+        $version = [PLUtil]::GetFileVersion($this.Config.SysFile)
         return [PLUtil]::CheckSameVersion($version, $this.Driver.Version)
     }
 
-    [void] GetConsent()
+    [bool] GetConsent()
     {
+        $uninstall = ($this.Config.SysIsStaged -and
+            $this.Config.SysIsPackage -and
+            $this.Config.Drivers.Count -eq 1)
+
         Write-Host
-        Write-Host "This script will install PL-2303 driver, version $($this.Driver.Version)"
 
-        if ($this.Config.InstalledMessage) {
-            $this.IO.Indent("$($this.Config.InstalledMessage) and will be replaced.")
+        if ($uninstall) {
+            Write-Host "This script cannot install PL-2303 driver version $($this.Driver.Version),"
+            Write-Host 'because it is already installed and available for use.'
+            $question = 'Would you like to uninstall it instead?'
+        } else {
+            Write-Host "This script will install PL-2303 driver, version $($this.Driver.Version)"
+            if ($this.Config.InstalledMessage) {
+                $this.IO.Indent("$($this.Config.InstalledMessage) and will be replaced.")
+            }
+            $question = 'Please confirm that you want to do this?'
         }
-
-        $question = 'Please confirm that you want to do this?'
 
         if ($this.IO.PromptYes($question, 'y')) {
             Write-Host
         } else {
             exit 1
         }
+
+        return $uninstall
     }
 
     [string] GetInstallationProgram()
@@ -157,15 +173,24 @@ class PLApp
 
     [bool] RemoveInstalledDrivers()
     {
-        if ($this.InstalledDrivers.Count -eq 0) {
+        # Check in case something has changed
+        $this.CheckSameConfig($false)
+
+        return $this.RemoveInstalledDrivers($this.Config.Drivers)
+    }
+
+    [bool] RemoveInstalledDrivers([array]$drivers)
+    {
+        $driverStr = $(if ($drivers.Count -eq 1) {'driver'} else {'drivers'})
+
+        if ($drivers.Count -eq 0) {
             return $true;
         }
 
-        Write-Host 'Removing PL-2303 drivers from the DriverStore'
-        $errors = [PLUtil]::RemoveDrivers($this.InstalledDrivers)
+        Write-Host "Removing PL-2303 $driverStr from the DriverStore"
+        $errors = [PLUtil]::RemoveDrivers($drivers)
 
         if ($errors.Count -eq 0) {
-            $driverStr = $(if ($this.InstalledDrivers.Count -eq 1) {'driver'} else {'drivers'})
             $this.IO.Indent("Success: PL-2303 $driverStr removed")
         } else {
             foreach ($item in $errors) {
@@ -174,5 +199,27 @@ class PLApp
             }
         }
         return ($errors.Count -eq 0)
+    }
+
+    [bool] UninstallDriver()
+    {
+        # Check in case something has changed
+        $this.CheckSameConfig($true)
+
+        if (!($this.RemoveInstalledDrivers($this.Config.Drivers))) {
+            return $false
+        }
+
+        Write-Host "Removing the device driver from the System directory"
+        Remove-Item $this.Config.SysFile
+
+        if (!(Test-Path $this.Config.SysFile)) {
+            $this.IO.Indent("Success: removed $($this.Config.SysInfo)")
+        } else {
+            # There is not much we can do about this, apart from report it
+            $this.IO.Indent("Error: failed to remove $($this.Config.SysInfo)")
+        }
+
+        return $true
     }
 }

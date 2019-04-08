@@ -26,11 +26,21 @@ $app.CheckForInstaller()
 
 
 # *****************************************************************************
-# Show the version of any installed driver and get confirmation to proceed.
+# Show the version of any installed driver and get confirmation to proceed. If
+# this version is the only entry in the DriverStore and the System32 sys file
+# matches, the user can only uninstall it.
 #
 # - The user can exit the script at this stage.
 # *****************************************************************************
-$app.GetConsent()
+$uninstall = $app.GetConsent()
+
+if ($uninstall) {
+    if ($app.UninstallDriver()) {
+        $app.IO.FinishForUninstaller($app.Driver.GetVersionString())
+    } else {
+        $app.IO.FinishFail()
+    }
+}
 
 
 # *****************************************************************************
@@ -41,8 +51,7 @@ $app.GetConsent()
 #   let Windows sort this out the next time this script is run.
 # *****************************************************************************
 if (!($app.RemoveInstalledDrivers())) {
-    $msg = 'The following suggestions may help to resolve this issue:'
-    $app.IO.FinishWithHelp($msg)
+    $app.IO.FinishFail()
 }
 
 if (!($app.InstallDriver())) {

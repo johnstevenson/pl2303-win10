@@ -51,4 +51,24 @@ class PLConfig
             }
         }
     }
+
+    [bool] CheckCurrent([bool]$checkSystemSys)
+    {
+        $config = [PLConfig]::new($this.Package)
+
+        if ($this.Drivers.Count -ne $config.Drivers.Count) {
+            return $false
+        }
+
+        foreach ($driver in $this.Drivers) {
+            if (!([PLUtil]::MatchDriver($config.Drivers, $driver.version))) {
+                return $false
+            }
+        }
+
+        if ($checkSystemSys) {
+            return [PLUtil]::CheckSameVersion($this.SysVersion, $config.SysVersion)
+        }
+        return $true
+    }
 }
