@@ -1,7 +1,7 @@
 # pl2303-win10
 
 [![GitHub release](https://img.shields.io/github/release/johnstevenson/pl2303-win10.svg?color=blue)](https://github.com/johnstevenson/pl2303-win10/releases)
-[![AppVeyor](https://img.shields.io/appveyor/ci/johnstevenson/pl2303-win10/master.svg)](https://ci.appveyor.com/project/johnstevenson/pl2303-win10)
+[![AppVeyor](https://img.shields.io/appveyor/ci/johnstevenson/pl2303-win10/master.svg)](https://ci.appveyor.com/project/johnstevenson/pl2303-win10/branch/master)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Windows 10 driver for end-of-life PL-2303 chipsets.
