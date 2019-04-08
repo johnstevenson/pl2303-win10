@@ -119,7 +119,7 @@ class PLApp
 
         # The official Prolific installer id
         $productIds = @('{ECC3713C-08A4-40E3-95F1-7D0704F1CE5E}')
-        # Add installer from http://www.ifamilysoftware.com/ (see news pages)
+        # Add installer from http://www.ifamilysoftware.com/Prolific_PL-2303_Code_10_Fix.html
         $productIds += 'PL2303 Code 10 Fix_is1'
 
         $data = $this.GetRegUninstallData($keys, $productIds)
