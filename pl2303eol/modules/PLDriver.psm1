@@ -25,6 +25,11 @@ class PLDriver
         }
     }
 
+    [string] GetVersionString()
+    {
+        return "$($this.Version) ($($this.Date))"
+    }
+
     [bool] CheckAndSetVersion()
     {
         # Get driver date and version from inf file
