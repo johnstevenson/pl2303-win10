@@ -1,9 +1,11 @@
+using module .\PLConfig.psm1
 using module .\PLConsole.psm1
 using module .\PLDriver.psm1
 using module .\PLUtil.psm1
 
 class PLApp
 {
+    [PLConfig]$Config
     [PLDriver]$Driver
     [PLConsole]$IO
     [string]$SystemSys
@@ -19,7 +21,8 @@ class PLApp
     [void] CheckForDrivers()
     {
         Write-Host 'Checking the DriverStore for installed PL-2303 driver packages'
-        $this.InstalledDrivers = [PLUtil]::GetDrivers($this.Driver.InfFile)
+        $this.Config = [PLConfig]::new($this.Driver)
+        $this.InstalledDrivers = $this.Config.Drivers
 
         if ($this.InstalledDrivers.Count -eq 0) {
             $this.IO.Indent('Found: none')
