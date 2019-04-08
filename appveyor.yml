@@ -1,10 +1,10 @@
 image: Visual Studio 2017
+platform: x64
 build: false
-shallow_clone: true
+clone_depth: 5
 
 environment:
   PL2303_NO_INTERACTION: 1
 
 test_script:
-  - cd %APPVEYOR_BUILD_FOLDER%
-  - install.bat
+  - appveyor\test.bat

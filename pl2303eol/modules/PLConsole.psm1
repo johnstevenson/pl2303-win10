@@ -16,7 +16,15 @@ class PLConsole
         exit $exitCode
     }
 
-    [void] FinishForInstaller([string]$name)
+    [void] FinishFail()
+    {
+        Write-Host
+        Write-Host 'The following suggestions may help to resolve this issue:'
+        $this.ShowHelp()
+        $this.Finish([string]::Empty, 1)
+    }
+
+    [void] FinishFailInstaller([string]$name)
     {
         Write-Host
         Write-Host "Please uninstall '$name' from the Control Panel, because it"
@@ -24,11 +32,11 @@ class PLConsole
         $this.Finish([string]::Empty, 1)
     }
 
-    [void] FinishWithHelp([string]$message)
+    [void] FinishForUninstaller([string]$version)
     {
         Write-Host
-        Write-Host $message
-        $this.ShowHelp()
+        Write-Host "PL-2303 driver version $version has been uninstalled."
+        Write-Host 'Windows will find the latest driver when you next plug in your device.'
         $this.Finish([string]::Empty, 0)
     }
 

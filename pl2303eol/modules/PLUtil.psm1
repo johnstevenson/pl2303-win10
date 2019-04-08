@@ -100,6 +100,12 @@ class PLUtil
             &pnputil.exe /delete-driver $driver.oem /uninstall /force >$null 2>&1
 
             if ($LastExitCode -ne 0) {
+                # Try again without params in case this driver has not been
+                # activated or has become orphaned.
+                &pnputil.exe /delete-driver $driver.oem >$null 2>&1
+            }
+
+            if ($LastExitCode -ne 0) {
                 $errors += $driver
             }
         }
