@@ -33,7 +33,13 @@ class PLApp
             }
         }
 
-        $this.CheckForSysFile($this.InstalledDrivers)
+        Write-Host 'Checking the System directory for a PL-2303 device driver'
+
+        if ($this.Config.SysInfo) {
+            $this.IO.Indent("Found: $($this.Config.SysInfo)")
+        } else {
+            $this.IO.Indent('Found: none')
+        }
     }
 
     [void] CheckForInstaller()
@@ -44,27 +50,6 @@ class PLApp
         if ($installer) {
             $this.IO.Indent("Found: $installer")
             $this.IO.FinishForInstaller($installer)
-        } else {
-            $this.IO.Indent('Found: none')
-        }
-    }
-
-    [void] CheckForSysFile([array]$drivers)
-    {
-        Write-Host 'Checking the System directory for a PL-2303 device driver'
-        $version = [PLUtil]::GetFileVersion($this.SystemSys)
-
-        if ($version) {
-            # We cannot use the file date, so try and find a match from the DriverStore
-            $item = [PLUtil]::MatchDriver($drivers, $version)
-
-            if ($item) {
-                $info = "$($item.date), $version"
-            } else {
-                $info = $version
-            }
-
-            $this.IO.Indent("Found: $($this.Driver.SysFile) ($info)")
         } else {
             $this.IO.Indent('Found: none')
         }
