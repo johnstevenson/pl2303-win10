@@ -1,7 +1,9 @@
 ## [Unreleased]
+  * Added: option to uninstall our driver if has been activated.
   * Added: this CHANGELOG.
   * Added: explanation why an existing installer must be removed.
-  * Added: report if sys file is in System32 drivers directory. 
+  * Added: report if sys file is in System32 drivers directory.
+  * Changed: internal code decoupling. 
   * Changed: improved non-interactive output.
 
 ## [1.0.0-rc.1] - 2019-04-04  
