@@ -34,7 +34,7 @@ Write-Host
 
 # *****************************************************************************
 # Show a list of PL-2303 drivers in the DriverStore and any sys file in the
-# System drivers directory. Then check if a PL-2303 driver installation
+# System32 drivers directory. Then check if a PL-2303 driver installation
 # program is installed.
 #
 # - If there is an installer, the user will be asked to uninstall it and the
@@ -67,7 +67,7 @@ if ($uninstall) {
 # Remove all PL-2303 drivers from the DriverStore then add our own driver.
 #
 # - Uses pnputil.exe for both operations. It is not uncommon for a removal to
-#   fail, if the DriverStore and internal driver database are out of sync. We
+#   fail, if the DriverStore and Plug and Play database are out of sync. We
 #   let Windows sort this out the next time this script is run.
 # *****************************************************************************
 if (!($app.RemoveInstalledDrivers())) {
