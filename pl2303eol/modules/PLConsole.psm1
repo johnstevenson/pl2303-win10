@@ -36,7 +36,6 @@ class PLConsole
     {
         Write-Host
         Write-Host "PL-2303 driver version $version has been uninstalled."
-        Write-Host 'Windows will find the latest driver when you next plug in your device.'
         $this.Finish([string]::Empty, 0)
     }
 

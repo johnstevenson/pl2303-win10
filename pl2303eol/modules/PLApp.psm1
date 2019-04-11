@@ -75,7 +75,7 @@ class PLApp
         Write-Host
 
         if ($uninstall) {
-            Write-Host "This script cannot install PL-2303 driver version $($this.Driver.Version),"
+            Write-Host "This script cannot install PL-2303 driver version $($this.Driver.Version)"
             Write-Host 'because it is already installed and available for use.'
             $question = 'Would you like to uninstall it instead?'
         } else {
