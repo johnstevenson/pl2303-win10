@@ -1,8 +1,28 @@
 #Requires -Version 5.0 -RunAsAdministrator
 using module .\modules\PLApp.psm1
 
+
+# *****************************************************************************
+# Ensure we stop and display any error and check for bitness incompatibility.
+#
+# *****************************************************************************
 $ErrorActionPreference = 'Stop'
 
+Trap {
+    Write-Host "Error: $_" -ForegroundColor Red
+    try {Read-Host -Prompt "`nPress the enter key to finish"} catch {}
+    exit 1
+}
+
+if ($Env:PROCESSOR_ARCHITEW6432) {
+    throw 'This script must run on 64-bit Powershell'
+}
+
+
+# *****************************************************************************
+# Start main app and show the title.
+#
+# *****************************************************************************
 $app = [PLApp]::new("$PSScriptRoot\driver")
 
 Write-Host
