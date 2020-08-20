@@ -126,10 +126,10 @@ class PLApp
         foreach ($key in $keys) {
             foreach ($productId in $productIds) {
                 $productKey = "$key\$productId"
+                $data = Get-ItemProperty -Path $productKey
 
-                if (Test-Path -Path $productKey) {
-                    return Get-Item -Path $productKey | Get-ItemProperty |
-                        Select-Object -Property DisplayName
+                if ($data.DisplayName) {
+                    return $data.DisplayName
                 }
             }
         }
