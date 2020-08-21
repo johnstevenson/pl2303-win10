@@ -107,44 +107,22 @@ class PLApp
             $keys += $uninstallKey
         }
 
-        # The official Prolific installer id
-        $productIds = @('{ECC3713C-08A4-40E3-95F1-7D0704F1CE5E}')
+        # Official Prolific installer ids
+        $productIds = @('{ECC3713C-08A4-40E3-95F1-7D0704F1CE5E}', '{BC40B9A3-568C-4E39-8EF5-B3883D7152AC}')
         # Add installer from http://www.ifamilysoftware.com/Prolific_PL-2303_Code_10_Fix.html
         $productIds += 'PL2303 Code 10 Fix_is1'
 
-        $data = $this.GetRegUninstallData($keys, $productIds)
-
-        if ($data) {
-            return $data.DisplayName
-        }
-        return [string]::Empty
-    }
-
-    [object] GetRegUninstallData([array]$keys, [array]$productIds)
-    {
-        # Try with the specific installer product id
         foreach ($key in $keys) {
             foreach ($productId in $productIds) {
                 $productKey = "$key\$productId"
-                $data = Get-ItemProperty -Path $productKey
+                $data = Get-ItemProperty -Path $productKey -ErrorAction SilentlyContinue
 
-                if ($data.DisplayName) {
+                if ($data -and $data.DisplayName) {
                     return $data.DisplayName
                 }
             }
         }
-
-        # Try with a generic description in case of a new installer
-        foreach ($key in $keys) {
-            $data = Get-ChildItem -Path $key | Get-ItemProperty |
-                Where-Object {$_.Publisher -match 'Prolific' -and $_.DisplayName -match 'PL.*2303' } |
-                Select-Object -Property DisplayName
-
-            if ($data) {
-                return $data
-            }
-        }
-        return $null
+        return [string]::Empty
     }
 
     [bool] InstallDriver()
